@@ -69,7 +69,7 @@ const fetchData = async () => {
     }
 
     // Mengambil logo gambar dari cache atau jaringan
-    const cachedLogo = await getCachedData("logo.png");
+    const cachedLogo = await getCachedData("/assets/images/logo.png");
     if (!cachedLogo) {
       await setCachedData("logo.png", logoUrl.value, true);
     } else {
