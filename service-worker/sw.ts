@@ -11,6 +11,7 @@ declare let self: ServiceWorkerGlobalScope
 const CACHE_NAME = 'diamond-clinic-cache-v2';
 const ASSETS_TO_CACHE = [
   '/',
+  '/dataClinic.json'
 ];
 
 // Precache assets defined in __WB_MANIFEST
