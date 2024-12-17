@@ -109,12 +109,16 @@
               />
               <div class="absolute w-full aspect-[16/9]">
                 <iframe
+                  v-if="isOnline"
                   :src="getEmbedUrl(product.url)"
                   class="top-0 left-0 w-full h-full"
                   :title="product.title || 'Video content'"
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                   @load="handleImageLoad"
                 />
+                <div v-else="!isOnline" class="flex justify-center items-center w-full h-full bg-gray-100">
+                  YouTube videos can only be played when ONLINE
+                </div>
                 <!-- allowfullscreen -->
               </div>
 
@@ -168,6 +172,9 @@ const props = defineProps({
 
 const emit = defineEmits(['image-loaded']);
 const menuStore = useMenuStore();
+
+const onlineStore = useOnlineStore();
+const { isOnline } = storeToRefs(onlineStore);
 
 // Refs
 const swiperRef = ref(null);
@@ -292,8 +299,8 @@ const toggleFullscreen = async () => {
       docElm.msRequestFullscreen();
     }
 
-    const wrapper = document.querySelector('.swiper-wrapper').classList
-    wrapper.add('!h-[100dvh]')
+    const wrapper = document.querySelector('.swiper-wrapper').classList;
+    wrapper.add('!h-[100dvh]');
     isFullScreen.value = true;
   } else {
     if (document.exitFullscreen) {
@@ -305,8 +312,8 @@ const toggleFullscreen = async () => {
     } else if (document.msExitFullscreen) {
       document.msExitFullscreen();
     }
-     const wrapper = document.querySelector('.swiper-wrapper').classList
-    wrapper.remove('!h-[100dvh]')
+    const wrapper = document.querySelector('.swiper-wrapper').classList;
+    wrapper.remove('!h-[100dvh]');
     isFullScreen.value = false;
   }
 };

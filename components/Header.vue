@@ -40,11 +40,14 @@
 <script setup>
 import { useApiDataStore } from '@/composables/useApiDataStores';
 import { useMenuStore } from '@/composables/menuStore';
+import { useOnlineStore } from '~/composables/onlineStore';
 
 const menuStore = useMenuStore();
 
 const apiDataStore = useApiDataStore();
+const onlineStore = useOnlineStore();
 const { data } = storeToRefs(apiDataStore);
+const { isOnline } = storeToRefs(onlineStore);
 
 const sidebarStore = useSidebar();
 
@@ -55,8 +58,6 @@ const props = defineProps({
 });
 
 const emit = defineEmits(['update:selected']);
-
-const isOnline = ref(true);
 
 const handleItem = (dataMenu, id) => {
   if (dataMenu.length === 0) {
@@ -72,7 +73,7 @@ const handleItem = (dataMenu, id) => {
 };
 
 const updateOnlineStatus = () => {
-  isOnline.value = navigator.onLine;
+  onlineStore.setOnline(navigator.onLine);
 };
 onMounted(() => {
   window.addEventListener('online', updateOnlineStatus);
