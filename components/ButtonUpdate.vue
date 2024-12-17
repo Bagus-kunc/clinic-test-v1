@@ -19,6 +19,9 @@ import { useToast } from 'primevue/usetoast';
 
 const toast = useToast();
 
+const onlineStore = useOnlineStore();
+const { isOnline } = storeToRefs(onlineStore);
+
 const props = defineProps({
   label: {
     type: String,
@@ -35,6 +38,15 @@ const emit = defineEmits(['click']);
 const isLoading = ref(false);
 
 const updateCache = () => {
+  if (!isOnline.value) {
+    return toast.add({
+      severity: 'error',
+      summary: 'Update Failed',
+      detail: 'Please check your internet connection',
+      life: 3000,
+    });
+  }
+
   isLoading.value = true;
 
   toast.add({ severity: 'info', summary: 'Updating...', detail: 'Cache update in progress', life: 3000 });
