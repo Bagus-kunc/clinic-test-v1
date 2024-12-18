@@ -241,7 +241,9 @@ const getEmbedUrl = (url) => {
         videoId = pathname.slice(1);
       }
 
-      return videoId ? `https://www.youtube.com/embed/${videoId}?enablejsapi=1&fs=0` : url;
+      return videoId
+        ? `https://www.youtube.com/embed/${videoId}?enablejsapi=1&fs=0&rel=0`
+        : (url += '?enablejsapi=1&fs=0&rel=0');
     }
 
     return url;
@@ -360,7 +362,7 @@ onMounted(() => {
 
       const adjustBulletSize = () => {
         const windowWidth = window.innerWidth;
-        const swiperContainer = document.querySelector('.swiper-pagination-container').classList
+        const swiperContainer = document.querySelector('.swiper-pagination-container').classList;
         let bulletWidth;
 
         if (windowWidth > 768) {
