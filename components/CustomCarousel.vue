@@ -30,7 +30,7 @@
           :lazy="{ loadPrevNext: true, loadOnTransitionStart: true }"
           class="max-h-[100dvw] md:w-[100dvh]"
           :class="{
-            ' md:max-h-[100dvh] max-w-[110dvh] !m-0': isFullScreen,
+            'md:max-h-[100dvh] max-w-[110dvh] !m-0': isFullScreen,
             'md:max-h-[91dvh]': !isFullScreen,
           }"
           @swiper="handleSwiperInit"
@@ -45,7 +45,7 @@
                 :src="coverSubMenu"
                 alt="Cover Image"
                 format="webp"
-                class="object-cover md:h-full mx-auto"
+                class="md:h-full mx-auto"
                 loading="lazy"
                 fetchpriority="high"
                 :sizes="{ sm: '320px', md: '768px', lg: '1024px' }"
@@ -76,7 +76,7 @@
                 :src="product.url"
                 :alt="product.title || 'Content Image'"
                 format="webp"
-                class="object-cover md:h-full mx-auto"
+                class="md:h-full mx-auto"
                 loading="lazy"
                 fetchpriority="high"
                 :sizes="{ sm: '320px', md: '768px', lg: '1024px' }"
