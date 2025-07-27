@@ -1,5 +1,5 @@
 // nuxt.config.ts
-import { defineNuxtConfig } from 'nuxt/config';
+import { defineNuxtConfig } from "nuxt/config";
 
 export default defineNuxtConfig({
   modules: [
@@ -55,7 +55,7 @@ export default defineNuxtConfig({
     exposeConfig: false,
   },
 
-  css: ['~/assets/css/tailwind.css', '~/assets/css/main.css'],
+  css: ["~/assets/css/tailwind.css", "~/assets/css/main.css"],
 
   primevue: {
     autoImport: false,
@@ -68,18 +68,18 @@ export default defineNuxtConfig({
   },
 
   pwa: {
-    strategies: 'injectManifest',
-    srcDir: 'service-worker',
-    filename: 'sw.ts',
-    registerType: 'autoUpdate',
+    strategies: "injectManifest",
+    srcDir: "service-worker",
+    filename: "sw.ts",
+    registerType: "autoUpdate",
     manifest: {
-      name: 'Diamond Clinic',
-      short_name: 'DiamonClinic',
-      description: 'Diamond Beauty & Anti Aging Clinic',
-      theme_color: '#ffffff',
-      background_color: '#ffffff',
-      display: 'standalone',
-      orientation: 'portrait',
+      name: "Diamond Clinic",
+      short_name: "DiamonClinic",
+      description: "Diamond Beauty & Anti Aging Clinic",
+      theme_color: "#ffffff",
+      background_color: "#ffffff",
+      display: "standalone",
+      orientation: "portrait",
       icons: [
         {
           src: '/pwa-192x192.png',
@@ -105,8 +105,8 @@ export default defineNuxtConfig({
     },
     devOptions: {
       enabled: true,
-      navigateFallback: '/',
-      type: 'module',
+      navigateFallback: "/",
+      type: "module",
     },
   },
 
@@ -118,7 +118,7 @@ export default defineNuxtConfig({
 
   postcss: {
     plugins: {
-      'postcss-import': {},
+      "postcss-import": {},
       tailwindcss: {},
       autoprefixer: {},
     },

@@ -12,7 +12,7 @@
       <Listbox
         v-if="accordionItems.length > 0"
         v-model="state.selectedBox"
-        class="menu w-full border-none rounded-none custom-listbox bg-transparent"
+        class="w-full bg-transparent border-none rounded-none menu custom-listbox"
         :options="accordionItems"
         listStyle="max-height:calc(100%); scrollbar-width:none;"
         pt:list:class="gap-[5px]"
@@ -22,13 +22,13 @@
           <img v-if="isOptionSelected(option)" src="~/assets/images/bg-diamond.jpg" class="bg-img" />
           <div v-if="isOptionSelected(option)" class="bg-color" />
           <div
-            class="menu-item flex justify-between h-full cursor-pointer z-50 relative items-center w-full bg-transparent"
+            class="relative z-50 flex items-center justify-between w-full h-full bg-transparent cursor-pointer menu-item"
             :class="{ 'menu-item-selected text-[#000080]': isOptionSelected(option) }"
             @click="handleMainClick(option)"
           >
             <div class="flex justify-between pl-6">{{ option.title }}</div>
             <div
-              class="pl-4 pr-6 h-full flex justify-center items-center"
+              class="flex items-center justify-center h-full pl-4 pr-6"
               @click.stop="handleArrowClick(option, $event)"
             >
               <img
@@ -64,9 +64,9 @@
               pt:option:class="!p-0"
             >
               <template #option="{ option, selected }">
-                <div class="w-full flex justify-between px-3 py-2" @click.stop="handleItemClick(option)">
+                <div class="flex justify-between w-full px-3 py-2" @click.stop="handleItemClick(option)">
                   <span> {{ option.title }} </span>
-                  <div class="flex-none ml-2 w-6">
+                  <div class="flex-none w-6 ml-2">
                     <ProgressSpinner
                       v-if="option.loading"
                       style="width: 24px; height: 24px"
