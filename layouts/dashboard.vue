@@ -1,5 +1,5 @@
 <template>
-    <main class="dashboard-layout">
-      <slot />
-    </main>
+  <main class="dashboard-layout">
+    <slot />
+  </main>
 </template>

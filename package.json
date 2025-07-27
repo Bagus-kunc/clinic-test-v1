@@ -9,23 +9,38 @@
     "preview": "nuxt preview",
     "dev:preview:build": "nuxt build && nuxt start",
     "dev:preview:generate": "nuxt generate && nuxt start",
+    "lint": "yarn lint:eslint && yarn lint:prettier",
+    "lint:eslint": "eslint .",
+    "lint:prettier": "prettier . --check",
+    "lintfix": "eslint . --fix && prettier --write --list-different .",
     "postinstall": "nuxt prepare"
   },
   "dependencies": {
     "@nuxt/image": "^1.8.1",
+    "@pinia/nuxt": "^0.7.0",
     "@primevue/themes": "^4.1.1",
     "@vite-pwa/nuxt": "^0.10.5",
     "nuxt": "^3.13.2",
+    "nuxt-swiper": "^1.2.2",
+    "pinia": "^2.2.6",
     "primevue": "^4.1.1",
     "tailwindcss-primeui": "^0.3.4",
     "vue": "latest",
     "vue-router": "latest"
   },
   "devDependencies": {
+    "@iconify-json/ic": "^1.2.1",
+    "@nuxt/eslint": "^0.6.1",
+    "@nuxt/icon": "^1.6.1",
     "@nuxtjs/tailwindcss": "^6.12.2",
     "@primevue/nuxt-module": "^4.1.1",
     "@vite-pwa/assets-generator": "^0.2.6",
+    "eslint": "^9.14.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-prettier": "^5.2.1",
     "postcss-import": "^16.1.0",
+    "prettier": "^3.3.3",
+    "typescript": "^5.6.3",
     "vite-plugin-pwa": "^0.20.5"
   },
   "packageManager": "yarn@1.22.22+sha512.a6b2f7906b721bba3d67d4aff083df04dad64c399707841b7acf00f6b133b7ac24255f2652fa22ae3534329dc6180534e98d17432037ff6fd140556e2bb3137e"

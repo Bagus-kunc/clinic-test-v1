@@ -3,7 +3,7 @@
 
 .p-listbox {
     @apply bg-surface-0 dark:bg-surface-950 text-surface-700 dark:text-surface-0
-        border border-surface-300 dark:border-surface-700 rounded-md
+        rounded-md
         shadow-[0_1px_2px_0_rgba(18,18,23,0.05)]
         transition-colors duration-200
 }
@@ -47,23 +47,23 @@
 }
 
 .p-listbox-striped li:nth-child(even of .p-listbox-option) {
-    @apply bg-surface-50 dark:bg-surface-900
+    /* @apply bg-surface-50 dark:bg-surface-900 */
 }
 
 .p-listbox .p-listbox-list .p-listbox-option.p-listbox-option-selected {
-    @apply bg-highlight
+    /* @apply bg-highlight */
 }
 
 .p-listbox:not(.p-disabled) .p-listbox-option.p-listbox-option-selected.p-focus {
-    @apply bg-highlight-emphasis
+    /* @apply bg-highlight-emphasis */
 }
 
 .p-listbox:not(.p-disabled) .p-listbox-option:not(.p-listbox-option-selected):not(.p-disabled).p-focus {
-    @apply bg-surface-100 dark:bg-surface-800 text-surface-800 dark:text-surface-0
+    /* @apply bg-surface-100 dark:bg-surface-800 text-surface-800 dark:text-surface-0 */
 }
 
 .p-listbox:not(.p-disabled) .p-listbox-option:not(.p-listbox-option-selected):not(.p-disabled):hover {
-    @apply bg-surface-100 dark:bg-surface-800 text-surface-800 dark:text-surface-0
+    /* @apply bg-surface-100 dark:bg-surface-800 text-surface-800 dark:text-surface-0 */
 }
 
 .p-listbox-option-check-icon {
@@ -71,7 +71,7 @@
 }
 
 .p-listbox-option-group {
-    @apply m-0 px-3 py-2 text-surface-500 dark:text-surface-400 font-semibold 
+    @apply m-0 px-3 py-2 text-surface-500 dark:text-surface-400 font-semibold
 }
 
 .p-listbox-empty-message {
