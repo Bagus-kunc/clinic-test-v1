@@ -15,78 +15,71 @@ import { storeToRefs } from 'pinia';
 import Toast from 'primevue/toast';
 import { useApiDataStore } from '@/composables/useApiDataStores';
 import { useImageCacheStore } from '@/composables/imageCacheStore';
-import { fetchAndCacheImage } from '@/utils/fetchAndCacheImage';
+import { backgroundCacher } from '@/utils/backgroundImageCache';
 
 const apiDataStore = useApiDataStore();
 const imageCacheStore = useImageCacheStore();
 
 /**
- * Collect all image URLs from API data
+ * Collect image URLs by priority
+ * Priority 0: First category menus (critical)
+ * Priority 1: Other categories (normal)
+ * Priority 2: Sub-items (low priority)
  */
-const collectAllImageUrls = () => {
+const collectImagesByPriority = () => {
   const { data } = storeToRefs(apiDataStore);
-  const urls = [];
+  const criticalImages = []; // Priority 0
+  const normalImages = []; // Priority 1
+  const lowPriorityImages = []; // Priority 2
 
-  data.value.categories?.forEach((category) => {
-    category.data?.forEach((menu) => {
+  data.value.categories?.forEach((category, categoryIndex) => {
+    category.data?.forEach((menu, menuIndex) => {
       if (menu.cover) {
-        urls.push(menu.cover);
+        // First category menus are critical
+        if (categoryIndex === 0 && menuIndex < 3) {
+          criticalImages.push(menu.cover);
+        } else {
+          normalImages.push(menu.cover);
+        }
       }
+
       menu.data?.forEach((submenu) => {
         submenu.data?.forEach((item) => {
           if (item.url && (item.url.endsWith('.jpg') || item.url.endsWith('.png') || item.url.endsWith('.jpeg'))) {
-            urls.push(item.url);
+            lowPriorityImages.push(item.url);
           }
         });
       });
     });
   });
 
-  return urls;
+  return { criticalImages, normalImages, lowPriorityImages };
 };
 
-const loadDataImage = async () => {
-  const { data } = storeToRefs(apiDataStore);
+/**
+ * Start background image caching with priority
+ * Does NOT block the UI - caches happen in background
+ */
+const startBackgroundImageCaching = () => {
+  const { criticalImages, normalImages, lowPriorityImages } = collectImagesByPriority();
 
-  await Promise.all(
-    data.value.categories.map(async (category) => {
-      await Promise.all(
-        category.data.map(async (menu) => {
-          if (menu.cover) {
-            await fetchAndCacheImage(menu.cover);
-          }
-        }),
-      );
-    }),
-  );
+  // Add images with decreasing priority (lower = higher priority)
+  if (criticalImages.length > 0) {
+    backgroundCacher.addToQueue(criticalImages, 0);
+  }
 
-  await Promise.all(
-    data.value.categories.map(async (category) => {
-      await Promise.all(
-        category.data.map(async (menu) => {
-          await Promise.all(
-            menu.data.map(async (submenu) => {
-              await Promise.all(
-                submenu.data.map(async (item) => {
-                  if (
-                    item.url &&
-                    (item.url.endsWith('.jpg') || item.url.endsWith('.png') || item.url.endsWith('.jpeg'))
-                  ) {
-                    await fetchAndCacheImage(item.url);
-                  }
-                }),
-              );
-            }),
-          );
-        }),
-      );
-    }),
-  );
+  if (normalImages.length > 0) {
+    backgroundCacher.addToQueue(normalImages, 1);
+  }
 
-  // Start centralized polling after initial image fetching
-  const allImageUrls = collectAllImageUrls();
-  if (allImageUrls.length > 0) {
-    imageCacheStore.startPolling(allImageUrls);
+  if (lowPriorityImages.length > 0) {
+    backgroundCacher.addToQueue(lowPriorityImages, 2);
+  }
+
+  // Start centralized polling for all images
+  const allImages = [...criticalImages, ...normalImages, ...lowPriorityImages];
+  if (allImages.length > 0) {
+    imageCacheStore.startPolling(allImages);
   }
 };
 
@@ -103,6 +96,7 @@ onBeforeUnmount(() => {
 
 onMounted(async () => {
   await apiDataStore.fetchData();
-  loadDataImage();
+  // Start background caching WITHOUT blocking - UI shows immediately
+  startBackgroundImageCaching();
 });
 </script>
