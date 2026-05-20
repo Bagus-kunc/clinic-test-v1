@@ -1,99 +1,102 @@
 <template>
-  <div
-    class="absolute bg-white md:bg-transparent top-0 min-w-[250px] menu-sidebar flex flex-col h-full pb-10 w-[250px] md:left-0 transition-all"
-    :class="sidebarStore.open ? 'left-0 !fixed z-[1000]' : '-left-[250px]'"
-  >
-    <div class="sticky top-0 z-[1010] flex flex-col justify-center gap-5 pl-4 mb-4 px-4">
-      <NuxtImg src="/images/logo-img.png" class="relative h-auto w-[220px]" alt="Header Logo" />
-    </div>
+  <div>
+    <div
+      class="absolute bg-white md:bg-transparent top-0 min-w-[250px] menu-sidebar flex flex-col h-full pb-10 w-[250px] md:left-0 transition-all"
+      :class="sidebarStore.open ? 'left-0 !fixed z-[1000]' : '-left-[250px]'"
+    >
+      <div class="sticky top-0 z-[1010] flex flex-col justify-center gap-5 pl-4 mb-4 px-4">
+        <NuxtImg src="/images/logo-img.png" class="relative h-auto w-[220px]" alt="Header Logo" />
+      </div>
 
-    <div class="overflow-y-auto bg-transparent" style="max-height: calc(100vh - 20vh)" @scroll="handleScroll">
-      <h1 class="px-7 unselectable text-gray-scorpion">Our Treatment:</h1>
-      <Listbox
-        v-if="accordionItems.length > 0"
-        v-model="state.selectedBox"
-        class="menu w-full border-none rounded-none custom-listbox bg-transparent"
-        :options="accordionItems"
-        listStyle="max-height:calc(100%); scrollbar-width:none;"
-        pt:list:class="gap-[5px]"
-        pt:option:class="!p-0"
-      >
-        <template #option="{ option }">
-          <img v-if="isOptionSelected(option)" src="~/assets/images/bg-diamond.jpg" class="bg-img" />
-          <div v-if="isOptionSelected(option)" class="bg-color" />
-          <div
-            class="menu-item flex justify-between h-full cursor-pointer z-50 relative items-center w-full bg-transparent"
-            :class="{ 'menu-item-selected text-[#000080]': isOptionSelected(option) }"
-            @click="handleMainClick(option)"
-          >
-            <div class="flex justify-between pl-6">{{ option.title }}</div>
+      <div class="overflow-y-auto bg-transparent" style="max-height: calc(100vh - 20vh)" @scroll="handleScroll">
+        <h1 class="px-7 unselectable text-gray-scorpion">Our Treatment:</h1>
+        <Listbox
+          v-if="accordionItems.length > 0"
+          v-model="state.selectedBox"
+          class="w-full bg-transparent border-none rounded-none menu custom-listbox"
+          :options="accordionItems"
+          listStyle="max-height:calc(100%); scrollbar-width:none;"
+          pt:list:class="gap-[5px]"
+          pt:option:class="!p-0"
+        >
+          <template #option="{ option }">
+            <img v-if="isOptionSelected(option)" src="~/assets/images/bg-diamond.jpg" class="bg-img" />
+            <div v-if="isOptionSelected(option)" class="bg-color" />
             <div
-              class="pl-4 pr-6 h-full flex justify-center items-center"
-              @click.stop="handleArrowClick(option, $event)"
+              class="relative z-50 flex items-center justify-between w-full h-full bg-transparent cursor-pointer menu-item"
+              :class="{ 'menu-item-selected text-[#000080]': isOptionSelected(option) }"
+              @click="handleMainClick(option)"
             >
-              <img
-                v-if="isOptionSelected(option)"
-                src="~/assets/icons/double-arrow-blue.svg"
-                alt="double arrow icon"
-                width="18"
-              />
-              <img v-else src="~/assets/icons/double-arrow-gray.svg" alt="double arrow icon" width="18" />
+              <div class="flex justify-between pl-6">{{ option.title }}</div>
+              <div
+                class="flex items-center justify-center h-full pl-4 pr-6"
+                @click.stop="handleArrowClick(option, $event)"
+              >
+                <img
+                  v-if="isOptionSelected(option)"
+                  src="~/assets/icons/double-arrow-blue.svg"
+                  alt="double arrow icon"
+                  width="18"
+                />
+                <img v-else src="~/assets/icons/double-arrow-gray.svg" alt="double arrow icon" width="18" />
+              </div>
             </div>
-          </div>
-        </template>
-      </Listbox>
+          </template>
+        </Listbox>
 
-      <!-- Teleport for Submenu -->
-      <Teleport to="#teleports">
-        <transition name="fade">
-          <div
-            v-if="isVisible"
-            ref="refSubMenu"
-            v-click-outside="handleClickOutside"
-            class="submenu"
-            :style="submenuPosition"
-          >
-            <Listbox
-              v-if="isVisible && state.selectedSubMenu?.data?.length > 0"
-              :options="state.selectedSubMenu.data"
-              :model-value="state.selectedSubItem"
-              optionLabel="title"
-              pt:root:class="bg-image-submenu"
-              class="w-full sublist"
-              listStyle="max-height:550px"
-              pt:option:class="!p-0"
+        <!-- Teleport for Submenu -->
+        <Teleport to="#teleports">
+          <transition name="fade">
+            <div
+              v-if="isVisible"
+              ref="refSubMenu"
+              v-click-outside="handleClickOutside"
+              class="submenu"
+              :style="submenuPosition"
             >
-              <template #option="{ option, selected }">
-                <div class="w-full flex justify-between px-3 py-2" @click.stop="handleItemClick(option)">
-                  <span> {{ option.title }} </span>
-                  <div class="flex-none ml-2 w-6">
-                    <ProgressSpinner
-                      v-if="option.loading"
-                      style="width: 24px; height: 24px"
-                      pt:circle:class="!text-gray-300"
-                      strokeWidth="3"
-                    />
+              <Listbox
+                v-if="isVisible && state.selectedSubMenu?.data?.length > 0"
+                :options="state.selectedSubMenu.data"
+                :model-value="state.selectedSubItem"
+                optionLabel="title"
+                pt:root:class="bg-image-submenu"
+                class="w-full sublist"
+                listStyle="max-height:550px"
+                pt:option:class="!p-0"
+              >
+                <template #option="{ option }">
+                  <div class="flex justify-between w-full px-3 py-2" @click.stop="handleItemClick(option)">
+                    <span> {{ option.title }} </span>
+                    <div class="flex-none w-6 ml-2">
+                      <ProgressSpinner
+                        v-if="option.loading"
+                        style="width: 24px; height: 24px"
+                        pt:circle:class="!text-gray-300"
+                        strokeWidth="3"
+                      />
+                    </div>
                   </div>
-                </div>
-              </template>
-            </Listbox>
-          </div>
-        </transition>
-      </Teleport>
+                </template>
+              </Listbox>
+            </div>
+          </transition>
+        </Teleport>
 
-      <ButtonUpdate label="Update" class="mt-2" />
+        <ButtonUpdate label="Update" class="mt-2" />
+      </div>
     </div>
+    <div
+      v-if="sidebarStore.open"
+      tabindex="0"
+      class="fixed bg-black/40 inset-0 z-[999]"
+      @click="sidebarStore.setOpen(false)"
+    ></div>
   </div>
-  <div
-    v-if="sidebarStore.open"
-    tabindex="0"
-    class="fixed bg-black/40 inset-0 z-[999]"
-    @click="sidebarStore.setOpen(false)"
-  ></div>
 </template>
 
 <script setup>
 import { useMenuStore } from '~/composables/menuStore';
+import { useImageCacheStore } from '~/composables/imageCacheStore';
 
 const props = defineProps({
   data: { type: Array, required: true, default: () => {} },
@@ -101,6 +104,7 @@ const props = defineProps({
 
 const toast = useToast();
 const menuStore = useMenuStore();
+const imageCacheStore = useImageCacheStore();
 const sidebarStore = useSidebar();
 
 // State management
@@ -148,14 +152,19 @@ const handleArrowClick = async (option, event) => {
     handleMainClick(option);
   }
 
+  // Pause main polling when opening submenu to prioritize submenu image loading
+  imageCacheStore.pausePolling();
+
   state.value.selectedSubMenu = {
     ...option,
     data: await Promise.all(
       option.data.map(async (subMenu) => {
         const images = subMenu.data.map((item) => item.url).filter(Boolean);
+        // const result = await checkImageOnCache(images);
+        const isAllCached = await checkImageOnCache(images);
         return {
           ...subMenu,
-          loading: await checkImageOnCache(images),
+          loading: !isAllCached,
         };
       }),
     ),
@@ -191,6 +200,8 @@ const handleArrowClick = async (option, event) => {
 
 const handleClickOutside = () => {
   state.value.submenuVisible = false;
+  // Resume main polling when closing submenu
+  imageCacheStore.resumePolling();
 };
 
 const handleItemClick = (item) => {
@@ -218,133 +229,68 @@ const handleItemClick = (item) => {
   }, 100);
 };
 
-watchEffect(() => {
-  if (state.value.selectedBox) {
-    const item = state.value.selectedBox;
-  }
-});
-
-const checkLoadedMenu = () => {
-  return accordionItems.value.every((menu) => !menu.loading);
-};
+// watchEffect(() => {
+//   if (state.value.selectedBox) {
+//     const item = state.value.selectedBox;
+//   }
+// });
 
 const setAccordionItems = async (data) => {
-  accordionItems.value = await Promise.all(
-    data.map(async (item) => {
-      const images = [];
-      if (item.cover) {
-        images.push(item.cover);
-      }
+  // PHASE 1: Render the basic data to the UI INSTANTLY without waiting for cache validation.
+  accordionItems.value = data.map((item) => {
+    const subItems = item.data.map((subItem) => ({
+      ...subItem,
+      clicked: false,
+      data: subItem.data.map((i) => ({ ...i })),
+    }));
 
-      const subItems = item.data.map((subItem) => ({
-        ...subItem,
-        clicked: false,
-        data: subItem.data.map((i) => {
-          if (i.url) {
-            images.push(i.url);
-          }
-          return { ...i };
-        }),
-      }));
+    return {
+      ...item,
+      clicked: false,
+      loading: true, // Set loading status to true
+      data: subItems,
+    };
+  });
 
-      return {
-        ...item,
-        clicked: false,
-        loading: await checkImageOnCache(images),
-        data: subItems,
-      };
-    }),
-  );
+  // PHASE 2: Perform cache checking progressively in the background
+  // Use requestIdleCallback or setTimeout to avoid blocking the main UI rendering
+  setTimeout(async () => {
+    const updatedItems = await Promise.all(
+      accordionItems.value.map(async (item) => {
+        const images = [];
+        if (item.cover) images.push(item.cover);
+
+        item.data.forEach((subItem) => {
+          subItem.data.forEach((i) => {
+            if (i.url) images.push(i.url);
+          });
+        });
+
+        // Cache check without blocking the UI
+        const isAllCached = await checkImageOnCache(images);
+
+        return {
+          ...item,
+          loading: !isAllCached, // Update loading status based on cache check result
+        };
+      }),
+    );
+
+    // Merge the new loading state into the currently displayed accordion state
+    accordionItems.value = accordionItems.value.map((item, index) => ({
+      ...item,
+      loading: updatedItems[index].loading,
+    }));
+  }, 50); // Give Safari a 50ms delay to allow the menu view to update first
 };
 
-let intervalCheckMenu;
 watch(
   () => props.data,
   async (newData) => {
-    clearInterval(intervalCheckMenu);
-
     setAccordionItems(newData);
-
-    intervalCheckMenu = setInterval(() => {
-      setAccordionItems(newData);
-
-      if (checkLoadedMenu()) {
-        clearInterval(intervalCheckMenu);
-      }
-    }, 1000);
   },
   { immediate: true },
 );
-
-const setSelectedSubMenu = async () => {
-  state.value.selectedSubMenu = {
-    ...state.value.selectedSubMenu,
-    data: await Promise.all(
-      state.value.selectedSubMenu.data.map(async (subMenu) => {
-        const images = subMenu.data.map((item) => item.url).filter((item) => item);
-
-        return {
-          ...subMenu,
-          loading: await checkImageOnCache(images),
-        };
-      }),
-    ),
-  };
-};
-
-const checkLoadedSelectedSubMenu = () => {
-  return state.value.selectedSubMenu.data.every((subMenu) => !subMenu.loading);
-};
-
-let intervalCheckAllImages;
-const checkAllImageLoaded = async () => {
-  const apiDataStore = useApiDataStore();
-  const { data } = storeToRefs(apiDataStore);
-
-  const images = [];
-
-  data.value.categories.map((category) => {
-    category.data.map((menu) => {
-      if (menu.cover) {
-        images.push(menu.cover);
-      }
-      menu.data.map((submenu) => {
-        submenu.data.map((item) => {
-          if (item.url) {
-            images.push(item.url);
-          }
-        });
-      });
-    });
-  });
-
-  intervalCheckAllImages = setInterval(async () => {
-    const response = await checkImageOnCache(images);
-
-    if (!response) {
-      clearInterval(intervalCheckAllImages);
-      console.log('All images are loaded');
-      toast.add({ severity: 'info', summary: 'Info', detail: 'All images are loaded', life: 5000 });
-    }
-  }, 1000);
-};
-
-let intervalCheckSubMenu;
-watchEffect(async () => {
-  if (isVisible.value) {
-    intervalCheckSubMenu = setInterval(() => {
-      setSelectedSubMenu();
-
-      if (checkLoadedSelectedSubMenu()) {
-        clearInterval(intervalCheckSubMenu);
-      }
-    }, 1000);
-  }
-
-  if (!isVisible.value) {
-    clearInterval(intervalCheckSubMenu);
-  }
-});
 
 const handleScroll = () => {
   state.value.submenuVisible = false;
@@ -361,18 +307,16 @@ watch(
 
 // Lifecycle hooks
 onMounted(() => {
-  checkAllImageLoaded();
   state.value.loading = true;
   menuStore.setCover('/images/contents/not-found.jpg');
 });
 
-const unwatch = watchEffect(() => {});
+// const unwatch = watchEffect(() => {});
 
 onUnmounted(() => {
-  unwatch();
-  clearInterval(intervalCheckSubMenu);
-  clearInterval(intervalCheckMenu);
-  clearInterval(intervalCheckAllImages);
+  // unwatch();
+  // Resume polling when component unmounts in case it was paused
+  imageCacheStore.resumePolling();
   state.value.selectedSubMenu = [];
   accordionItems.value = [];
 });

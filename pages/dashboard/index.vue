@@ -1,19 +1,23 @@
 <template>
-  <SplashScreen v-show="coverIsReady" />
+  <div>
+    <SplashScreen v-show="coverIsReady" />
 
-  <div v-if="!apiDataStore.loading" class="w-full h-[100svh] flex flex-col" style="font-family: 'Lato', sans-serif">
-    <Header v-model:selected="selectedHeader" />
+    <div v-if="!apiDataStore.loading" class="w-full h-[100svh] flex flex-col" style="font-family: 'Lato', sans-serif">
+      <!-- <Header v-model:selected="selectedHeader" /> -->
+      <Header :selected="selectedHeader" @update:selected="(val) => (selectedHeader = val)" />
 
-    <div class="flex flex-1">
-      <Sidebar :data="sidebarData" />
+      <div class="flex flex-1">
+        <Sidebar :data="sidebarData" />
 
-      <div class="flex-1 flex flex-col relative md:pl-[250px]">
-        <div v-if="menuStore.loading && !menuStore.imagesLoaded" class="spinner-overlay"></div>
-        <div v-if="menuStore.imagesLoaded" class="spinner-overlay">
-          <ProgressSpinner />
+        <div class="flex-1 flex flex-col relative md:pl-[250px]">
+          <div v-if="menuStore.loading && !menuStore.imagesLoaded" class="spinner-overlay"></div>
+
+          <div v-if="!imageCacheStore.allImagesCached" class="spinner-overlay">
+            <ProgressSpinner />
+          </div>
+
+          <CustomCarousel class="flex-1" :cover="menuStore.cover" />
         </div>
-
-        <CustomCarousel class="flex-1" :cover="menuStore.cover" />
       </div>
     </div>
   </div>
@@ -22,6 +26,7 @@
 <script setup>
 import { useApiDataStore } from '~/composables/useApiDataStores';
 import { useMenuStore } from '~/composables/menuStore';
+import { useImageCacheStore } from '~/composables/imageCacheStore';
 import Sidebar from '~/components/Sidebar.vue';
 import Header from '~/components/Header.vue';
 import CustomCarousel from '~/components/CustomCarousel.vue';
@@ -33,44 +38,30 @@ definePageMeta({
 
 const apiDataStore = useApiDataStore();
 const menuStore = useMenuStore();
+const imageCacheStore = useImageCacheStore();
 
-const selectedHeader = ref();
-const coverIsReady = ref(true);
+const selectedHeader = ref(1);
+
+menuStore.setSelected(selectedHeader.value);
+
+// syncronize first state and change when header clicked
+watch(
+  selectedHeader,
+  (newVal) => {
+    menuStore.setSelected(newVal);
+  },
+  { flush: 'sync' },
+);
+
+/**
+ * coverIsReady is now reactive to imageCacheStore.allImagesCached
+ * When all images are cached, splash screen is hidden (coverIsReady = false)
+ */
+const coverIsReady = computed(() => !imageCacheStore.allImagesCached);
 
 const sidebarData = computed(() => {
   const filter = apiDataStore.data.categories.find((item) => item.id === menuStore.selected);
   return filter?.data || [];
-});
-
-let intervalCheckAllImages;
-const checkAllImageLoaded = async () => {
-  const { data } = storeToRefs(apiDataStore);
-
-  const images = [];
-  data.value.categories.forEach((category) => {
-    category.data.forEach((menu) => {
-      if (menu.cover) {
-        images.push(menu.cover);
-      }
-    });
-  });
-
-  intervalCheckAllImages = setInterval(async () => {
-    const response = await checkImageOnCache(images);
-
-    if (!response) {
-      clearInterval(intervalCheckAllImages);
-      console.log('All cover are loaded');
-      coverIsReady.value = false;
-    }
-  }, 1000);
-};
-
-onMounted(() => {
-  setTimeout(() => {
-    menuStore.setImagesLoaded(false);
-    checkAllImageLoaded();
-  }, 2000);
 });
 </script>
 

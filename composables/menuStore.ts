@@ -61,9 +61,9 @@ export const useMenuStore = defineStore('menu', {
 
     setImagesLoaded(isImagesLoaded: boolean) {
       if (typeof isImagesLoaded === 'boolean') {
-        this.notFound = isImagesLoaded;
+        this.imagesLoaded = isImagesLoaded;
       } else {
-        console.error('Invalid notFound state: Expected a boolean');
+        console.error('Invalid imagesLoaded state: Expected a boolean');
       }
     },
   },

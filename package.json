@@ -1,10 +1,12 @@
 {
   "name": "nuxt-app",
+  "version": "1.1.0",
+  "updatedAt": "2024-06-17T08:00:00.000Z",
   "private": true,
   "type": "module",
   "scripts": {
     "build": "nuxt build",
-    "dev": "nuxt dev",
+    "dev": "nuxt dev --port 3004",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
     "dev:preview:build": "nuxt build && nuxt start",
@@ -35,6 +37,7 @@
     "@nuxtjs/tailwindcss": "^6.12.2",
     "@primevue/nuxt-module": "^4.1.1",
     "@vite-pwa/assets-generator": "^0.2.6",
+    "@vitejs/plugin-basic-ssl": "^2.3.0",
     "eslint": "^9.14.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-prettier": "^5.2.1",

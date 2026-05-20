@@ -2,7 +2,7 @@
   <div
     class="sticky w-full z-[998] flex items-center justify-center gap-1 p-2 border-b border-[#cdd5e0] min-h-[80px] md:ml-[250px] md:max-w-[calc(100vw-250px)]"
   >
-    <div class="flex md:hidden items-center flex-none mr-1">
+    <div class="flex items-center flex-none mr-1 md:hidden">
       <Button class="!bg-white !border-gray-300 !text-gray-500" icon="pi pi-bars" @click="sidebarStore.toggle()">
         <Icon name="ic:menu" size="24" />
       </Button>
@@ -12,7 +12,7 @@
         <li
           v-for="item in data.categories || []"
           :key="item.id"
-          class="transition-colors duration-200 cursor-pointer px-1 rounded block"
+          class="block px-1 transition-colors duration-200 rounded cursor-pointer"
           :class="{
             'bg-[#AAAAAAFC] text-white hover:text-white': selected === item.id,
             'hover:bg-[#f0f0f0] hover:text-[#AAAAAAFC]': selected !== item.id,

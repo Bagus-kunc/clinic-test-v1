@@ -1,5 +1,5 @@
 <template>
-  <div class="flex justify-center h-full relative card bg-transparent overflow-hidden">
+  <div class="relative flex justify-center h-full overflow-hidden bg-transparent card">
     <div ref="fullscreenDiv" class="flex justify-center max-h-[100svh]">
       <!-- Pagination -->
       <div class="swiper-pagination-container !top-7 left-1/2 w-full flex justify-center z-10">
@@ -39,13 +39,13 @@
         >
           <!-- Empty State -->
           <SwiperSlide v-if="coverSubMenu !== ''" class="relative !w-[100%]">
-            <div class="relative w-full md:h-full max-h-full">
+            <div class="relative w-full max-h-full md:h-full">
               <img
                 placeholder
                 :src="coverSubMenu"
                 alt="Cover Image"
                 format="webp"
-                class="md:h-full mx-auto"
+                class="mx-auto md:h-full"
                 loading="lazy"
                 fetchpriority="high"
                 :sizes="{ sm: '320px', md: '768px', lg: '1024px' }"
@@ -54,7 +54,7 @@
                 @error="handleImageError"
               />
               <Icon
-                class="absolute bottom-4 right-4 z-10 p-2 rounded-full bg-black/80 hover:bg-black/50 transition-colors"
+                class="absolute z-10 p-2 transition-colors rounded-full bottom-4 right-4 bg-black/80 hover:bg-black/50"
                 :name="isFullScreen ? 'ic:baseline-fullscreen-exit' : 'ic:sharp-fullscreen'"
                 size="35"
                 @click="toggleFullscreen"
@@ -70,13 +70,13 @@
             class="relative !w-[100%]"
           >
             <!-- Image Content -->
-            <div v-if="isImageType(product)" class="relative w-full md:h-full max-h-full">
+            <div v-if="isImageType(product)" class="relative w-full max-h-full md:h-full">
               <img
                 placeholder
                 :src="product.url"
                 :alt="product.title || 'Content Image'"
                 format="webp"
-                class="md:h-full mx-auto"
+                class="mx-auto md:h-full"
                 loading="lazy"
                 fetchpriority="high"
                 :sizes="{ sm: '320px', md: '768px', lg: '1024px' }"
@@ -87,7 +87,7 @@
 
               <!-- Fullscreen Button -->
               <Icon
-                class="absolute bottom-4 right-4 z-10 p-2 rounded-full bg-black/50 hover:bg-black/60 transition-colors"
+                class="absolute z-10 p-2 transition-colors rounded-full bottom-4 right-4 bg-black/50 hover:bg-black/60"
                 :name="isFullScreen ? 'ic:baseline-fullscreen-exit' : 'ic:sharp-fullscreen'"
                 size="35"
                 @click="toggleFullscreen"
@@ -96,7 +96,7 @@
             <!-- Video Content -->
             <div
               v-else-if="isVideoType(product)"
-              class="relative w-full md:h-full max-h-full flex items-center justify-center"
+              class="relative flex items-center justify-center w-full max-h-full md:h-full"
             >
               <img
                 v-if="isVideoType(product)"
@@ -116,7 +116,7 @@
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                   @load="handleImageLoad"
                 />
-                <div v-else="!isOnline" class="flex justify-center items-center w-full h-full bg-gray-100">
+                <div v-else class="flex items-center justify-center w-full h-full bg-gray-100">
                   YouTube videos can only be played when ONLINE
                 </div>
                 <!-- allowfullscreen -->
@@ -124,7 +124,7 @@
 
               <!-- Fullscreen Button -->
               <Icon
-                class="absolute bottom-4 right-4 z-10 p-2 rounded-full bg-black/50 hover:bg-black/60 transition-colors"
+                class="absolute z-10 p-2 transition-colors rounded-full bottom-4 right-4 bg-black/50 hover:bg-black/60"
                 :name="isFullScreen ? 'ic:baseline-fullscreen-exit' : 'ic:sharp-fullscreen'"
                 size="35"
                 @click="toggleFullscreen"
@@ -357,7 +357,6 @@ onMounted(() => {
   if (paginationContainer) {
     const observer = new MutationObserver(() => {
       const bullets = paginationContainer.querySelectorAll('.swiper-pagination-bullet');
-      console.log('Jumlah bullets:', bullets.length);
       swiperInstance.value.slideTo(0);
 
       const adjustBulletSize = () => {
